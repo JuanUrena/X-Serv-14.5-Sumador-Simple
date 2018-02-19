@@ -52,23 +52,19 @@ try:
             
         
             result=calculadora.function[operation](float(num1),float(num2))
+            result="El resultado de la operacion es: "+ result
         
             print(result)
            
-        except IndexError:
-            result=('Error: La entrada debe ser:'+
-            'python3 calculadora.py <operación> <num1> <num2>')
-        except ValueError:
-            result=('Error: La entrada debe ser:'+
-            'python3 calculadora.py <operación> <num1> <num2>')
-        except KeyError:
-            result=('Operacion no detectada, pruebe con:' +
-            'suma, resta, multiplicacion, division')   
+        except:
+            result=('<p>Error: La entrada debe ser: '+
+            'hostname:1234/num1/operacion/num2.</p>'+
+            '<p>Operaciones: suma, resta, multiplicacion, division.</p>')   
         
         recvSocket.send(b"HTTP/1.1 200 OK\r\n\r\n" +
                         b"<html><body><h1>Calculadora Online</h1>" +
-                        b"Tu resultado es:  </body></html>" +
                         bytes(result, 'utf-8') +
+                        b"</body></html>" +
                         b"\r\n")
         recvSocket.close()
 except KeyboardInterrupt:
