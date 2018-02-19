@@ -10,7 +10,7 @@ SAT(URJC)
 #Importamos paquetes necesarios
 
 import socket
-import random
+import calculadora
 
 #Creamos TCP socket
 mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,20 +30,47 @@ mySocket.listen(5)
 
 try:
     while True:
-#Genero URL aleatoria
-        nextNum = random.randrange(999999999)
-        nextUrl =str(nextNum)
 #Recibo mensaje
         print('Waiting for connections')
         (recvSocket, address) = mySocket.accept()
         print('Request received:')
-        print(recvSocket.recv(2048))
-        print('Answering back...')
+      #  print(recvSocket.recv(2048))
+       # print('Answering back...')
         
-        info=recvSocket.recv(2048).split()[1]
-#Envio mensaje
+        request=str(recvSocket.recv(2048), 'utf-8')
+        print(request)
+        
+        resource=request.split()[1]
+        print(resource)
+        
+        try:
+        
+            _, num1, operation, num2=resource.split('/')
+            print (num1)
+            print (operation)
+            print (num2)
+            
+        
+            result=calculadora.function[operation](float(num1),float(num2))
+        
+            print(result)
+           
+        except IndexError:
+            result=('Error: La entrada debe ser:'+
+            'python3 calculadora.py <operación> <num1> <num2>')
+        except ValueError:
+            result=('Error: La entrada debe ser:'+
+            'python3 calculadora.py <operación> <num1> <num2>')
+        except KeyError:
+            result=('Operacion no detectada, pruebe con:' +
+            'suma, resta, multiplicacion, division')   
+        
+        recvSocket.send(b"HTTP/1.1 200 OK\r\n\r\n" +
+                        b"<html><body><h1>Calculadora Online</h1>" +
+                        b"Tu resultado es:  </body></html>" +
+                        bytes(result, 'utf-8') +
+                        b"\r\n")
         recvSocket.close()
-        print('info')
 except KeyboardInterrupt:
     print("Closing binded socket")
     mySocket.close()
