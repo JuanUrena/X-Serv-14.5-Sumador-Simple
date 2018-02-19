@@ -34,14 +34,9 @@ try:
         print('Waiting for connections')
         (recvSocket, address) = mySocket.accept()
         print('Request received:')
-      #  print(recvSocket.recv(2048))
-       # print('Answering back...')
         
         request=str(recvSocket.recv(2048), 'utf-8')
-        print(request)
-        
         resource=request.split()[1]
-        print(resource)
         
         try:
         
